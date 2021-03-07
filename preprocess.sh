@@ -18,10 +18,10 @@
 #   recommended to use a multi-core machine for the preprocessing 
 #   step and set this value to the number of cores.
 # PYTHON - python3 interpreter alias.
-TRAIN_DIR=my_train_dir
-VAL_DIR=my_val_dir
-TEST_DIR=my_test_dir
-DATASET_NAME=my_dataset
+TRAIN_DIR=/data/sampling/train
+VAL_DIR=/data/sampling/val
+TEST_DIR=/data/sampling/test
+DATASET_NAME=js_dataset_min5
 MAX_CONTEXTS=200
 WORD_VOCAB_SIZE=1301136
 PATH_VOCAB_SIZE=911417
@@ -33,24 +33,31 @@ PYTHON=python3
 TRAIN_DATA_FILE=${DATASET_NAME}.train.raw.txt
 VAL_DATA_FILE=${DATASET_NAME}.val.raw.txt
 TEST_DATA_FILE=${DATASET_NAME}.test.raw.txt
-EXTRACTOR_JAR=JavaExtractor/JPredict/target/JavaExtractor-0.0.1-SNAPSHOT.jar
 
 mkdir -p data
 mkdir -p data/${DATASET_NAME}
 
 echo "Extracting paths from validation set..."
-${PYTHON} JavaExtractor/extract.py --dir ${VAL_DIR} --max_path_length 8 --max_path_width 2 --num_threads ${NUM_THREADS} --jar ${EXTRACTOR_JAR} > ${VAL_DATA_FILE}
+${PYTHON} JSExtractor/extract.py --dir ${VAL_DIR} --max_path_length 8 --max_path_width 2 > ${VAL_DATA_FILE}
 echo "Finished extracting paths from validation set"
 echo "Extracting paths from test set..."
-${PYTHON} JavaExtractor/extract.py --dir ${TEST_DIR} --max_path_length 8 --max_path_width 2 --num_threads ${NUM_THREADS} --jar ${EXTRACTOR_JAR} > ${TEST_DATA_FILE}
+${PYTHON} JSExtractor/extract.py --dir ${TEST_DIR} --max_path_length 8 --max_path_width 2 > ${TEST_DATA_FILE}
 echo "Finished extracting paths from test set"
 echo "Extracting paths from training set..."
-${PYTHON} JavaExtractor/extract.py --dir ${TRAIN_DIR} --max_path_length 8 --max_path_width 2 --num_threads ${NUM_THREADS} --jar ${EXTRACTOR_JAR} | shuf > ${TRAIN_DATA_FILE}
+${PYTHON} JSExtractor/extract.py --dir ${TRAIN_DIR} --max_path_length 8 --max_path_width 2 | shuf > ${TRAIN_DATA_FILE}
 echo "Finished extracting paths from training set"
 
 TARGET_HISTOGRAM_FILE=data/${DATASET_NAME}/${DATASET_NAME}.histo.tgt.c2v
 ORIGIN_HISTOGRAM_FILE=data/${DATASET_NAME}/${DATASET_NAME}.histo.ori.c2v
 PATH_HISTOGRAM_FILE=data/${DATASET_NAME}/${DATASET_NAME}.histo.path.c2v
+
+echo "validating"
+grep -E "^[a-zA-Z|]+\s" ${TRAIN_DATA_FILE} > ${TRAIN_DATA_FILE}.tmp
+mv -f ${TRAIN_DATA_FILE}.tmp ${TRAIN_DATA_FILE}
+grep -E "^[a-zA-Z|]+\s" ${VAL_DATA_FILE} > ${VAL_DATA_FILE}.tmp
+mv -f ${VAL_DATA_FILE}.tmp ${VAL_DATA_FILE}
+grep -E "^[a-zA-Z|]+\s" ${TEST_DATA_FILE} > ${TEST_DATA_FILE}.tmp
+mv -f ${TEST_DATA_FILE}.tmp ${TEST_DATA_FILE}
 
 echo "Creating histograms from the training data"
 cat ${TRAIN_DATA_FILE} | cut -d' ' -f1 | awk '{n[$0]++} END {for (i in n) print i,n[i]}' > ${TARGET_HISTOGRAM_FILE}
@@ -64,6 +71,5 @@ ${PYTHON} preprocess.py --train_data ${TRAIN_DATA_FILE} --test_data ${TEST_DATA_
     
 # If all went well, the raw data files can be deleted, because preprocess.py creates new files 
 # with truncated and padded number of paths for each example.
-rm ${TRAIN_DATA_FILE} ${VAL_DATA_FILE} ${TEST_DATA_FILE} ${TARGET_HISTOGRAM_FILE} ${ORIGIN_HISTOGRAM_FILE} \
-  ${PATH_HISTOGRAM_FILE}
-
+# rm ${TRAIN_DATA_FILE} ${VAL_DATA_FILE} ${TEST_DATA_FILE} ${TARGET_HISTOGRAM_FILE} ${ORIGIN_HISTOGRAM_FILE} \
+#   ${PATH_HISTOGRAM_FILE}
