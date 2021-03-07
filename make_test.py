@@ -22,7 +22,8 @@ valid = re.compile(r'^[a-zA-Z|]+\s')
 
 
 def work(page_id):
-    test_dir = f'/data/js/{page_id}'
+    # 各対象データのパス
+    test_dir = os.path.join(data_path, page_id)
     test_data_file = f'/data/c2v/{page_id}.test.raw.txt'
 
     if os.path.isfile(f'/data/c2v/{page_id}.test.c2v') is True:
@@ -51,16 +52,22 @@ def work(page_id):
 
 
 args = sys.argv
-data_list = os.listdir('/data/js/')
+# 対象データのパス
+data_path = '/data/js/'
+data_list = os.listdir(data_path)
 page_list = []
 
-with open('/data/target_pages.txt', 'r') as f:
-    page_list = [page_id for page_id in f.read().split('\n') if page_id in data_list]
-    page_list.extend([page_id for page_id in pd.read_csv('/data/target_revision.csv', header=0, usecols=['page_id'])['page_id'].values.tolist()])
+if os.path.exists('/data/c2v/') is False:
+    os.makedirs('/data/c2v')
+
+# 対象一覧を作成
+# with open('/data/target_pages.txt', 'r') as f:
+#     page_list = [page_id for page_id in f.read().split('\n') if page_id in data_list]
+#     page_list.extend([page_id for page_id in pd.read_csv('/data/target_revision.csv', header=0, usecols=['page_id'])['page_id'].values.tolist()])
 
 if __name__ == '__main__':
     with ProcessPoolExecutor() as executor:
-        futures = executor.map(work, page_list)
+        futures = executor.map(work, data_list)
 
         for future in futures:
             if future is not None:
