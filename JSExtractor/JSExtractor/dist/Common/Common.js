@@ -79,6 +79,9 @@ exports.getName = (node) => {
             ast_types_1.namedTypes.ClassProperty.check(node.parentPath.value))) {
         return node.parentPath.value.key.name;
     }
+    else if (ast_types_1.namedTypes.ClassMethod.check(node.value)) {
+        return node.parentPath.value[0].key.name;
+    }
     else {
         return null;
     }

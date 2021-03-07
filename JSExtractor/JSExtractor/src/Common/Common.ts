@@ -89,6 +89,8 @@ export const getName = (node: ASTPath<n.Node>): string => {
       n.ClassProperty.check(node.parentPath.value))
   ) {
     return node.parentPath.value.key.name;
+  } else if (n.ClassMethod.check(node.value)) {
+    return node.parentPath.value[0].key.name
   } else {
     return null;
   }
