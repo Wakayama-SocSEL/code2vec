@@ -6,6 +6,8 @@
 *.tar.gz
 **/log.txt
 *.log
+.DS_Store
+*.raw.txt
 
 tmp/**
 __pycache__/**
