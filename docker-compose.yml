@@ -8,7 +8,7 @@ services:
     container_name: code2vec
     volumes:
       - ./:/code2vec/
-      - /Users/kazuya/GitHub/Script-for-Research/data_organization/data/jsPerf:/data
+      - /Users/tomohiro-m/Downloads/unzip_projects:/data
     # runtime: nvidia
     # environment:
     #   - NVIDIA_VISIBLE_DEVICES=all

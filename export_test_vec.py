@@ -6,7 +6,7 @@ import pandas as pd
 
 def work(page):
     if page.endswith('.c2v') and f'{page}.vectors' not in c2v_list:
-        subprocess.run(f'python3 code2vec.py --load models/js_dataset_min5/saved_model --test {c2v_dir}/{page} --export_code_vectors', shell=True)
+        subprocess.run(f'python3 code2vec.py --load models/js_dataset_min5/saved_model_iter5 --test {c2v_dir}/{page} --export_code_vectors', shell=True)
         return page
 
 
