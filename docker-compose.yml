@@ -13,4 +13,6 @@ services:
     # environment:
     #   - NVIDIA_VISIBLE_DEVICES=all
     stdin_open: true
+    
     working_dir: /code2vec
+    
