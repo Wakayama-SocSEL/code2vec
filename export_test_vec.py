@@ -23,7 +23,7 @@ c2v_list = os.listdir(c2v_dir)
 c2v_pages = [filename for filename in c2v_list if filename.endswith('.c2v')]
 
 if __name__ == '__main__':
-    with ProcessPoolExecutor() as executor:
+    with ProcessPoolExecutor(max_wokers=20) as executor:
         futures = executor.map(work, c2v_pages)
         for future in futures:
             if future is not None:

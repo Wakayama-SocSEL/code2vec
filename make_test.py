@@ -66,7 +66,7 @@ if os.path.exists('/data/c2v/') is False:
 #     page_list.extend([page_id for page_id in pd.read_csv('/data/target_revision.csv', header=0, usecols=['page_id'])['page_id'].values.tolist()])
 
 if __name__ == '__main__':
-    with ProcessPoolExecutor() as executor:
+    with ProcessPoolExecutor(max_workers=20) as executor:
         futures = executor.map(work, data_list)
 
         for future in futures:
