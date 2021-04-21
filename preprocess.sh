@@ -37,12 +37,12 @@ TEST_DATA_FILE=${DATASET_NAME}.test.raw.txt
 mkdir -p data
 mkdir -p data/${DATASET_NAME}
 
-echo "Extracting paths from validation set..."
-${PYTHON} JSExtractor/extract.py --dir ${VAL_DIR} --max_path_length 8 --max_path_width 2 > ${VAL_DATA_FILE}
-echo "Finished extracting paths from validation set"
-echo "Extracting paths from test set..."
-${PYTHON} JSExtractor/extract.py --dir ${TEST_DIR} --max_path_length 8 --max_path_width 2 > ${TEST_DATA_FILE}
-echo "Finished extracting paths from test set"
+#echo "Extracting paths from validation set..."
+#${PYTHON} JSExtractor/extract.py --dir ${VAL_DIR} --max_path_length 8 --max_path_width 2 > ${VAL_DATA_FILE}
+#echo "Finished extracting paths from validation set"
+#echo "Extracting paths from test set..."
+#${PYTHON} JSExtractor/extract.py --dir ${TEST_DIR} --max_path_length 8 --max_path_width 2 > ${TEST_DATA_FILE}
+#echo "Finished extracting paths from test set"
 echo "Extracting paths from training set..."
 ${PYTHON} JSExtractor/extract.py --dir ${TRAIN_DIR} --max_path_length 8 --max_path_width 2 | shuf > ${TRAIN_DATA_FILE}
 echo "Finished extracting paths from training set"
